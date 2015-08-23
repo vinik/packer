@@ -3,6 +3,6 @@
   "builders": [{
   "type": "docker",
   "image": "ubuntu",
-  "export_path": "image.tar"
+  "commit": true
 }]
 }
