@@ -3,18 +3,8 @@
     "type": "docker",
     "image": "ubuntu",
     "commit": true
-  }],
+  }]
 
 
-  "post-processors": [
-    [
-      {
-        "type": "docker-import",
-        "repository": "vinik/web",
-        "tag": "0.1"
-      },
-      "docker-push"
-    ]
-  ]
 
 }
