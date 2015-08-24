@@ -5,7 +5,12 @@
     "export_path": "image.tar"
   }],
 
-  
+  "provisioners": [
+    {
+      "type": "chef-client",
+      "server_url": "https://manage.chef.io/organizations/ckrst"
+    }
+  ],  
 
 
   "post-processors": [
