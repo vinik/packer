@@ -2,18 +2,23 @@
   "builders": [{
     "type": "docker",
     "image": "ubuntu",
-    "commit": true
+    "export_path": "image.tar"
   }],
 
 
   "post-processors": [
     [
       {
-        "type": "docker-tag",
+        "type": "docker-import",
         "repository": "vinik/web",
         "tag": "0.1"
       },
-      "docker-push"
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_username": "vinik",
+        "login_password": "meuscontainer"
+      }
     ]
   ]
 
