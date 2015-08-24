@@ -30,7 +30,8 @@
       {
         "type": "docker-tag",
         "repository": "vinik/web",
-        "tag": "latest"
+        "tag": "latest",
+        "force": true
       },
       {
         "type": "docker-push",
