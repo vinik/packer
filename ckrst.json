@@ -31,7 +31,7 @@
         "type": "docker-tag",
         "repository": "vinik/web",
         "tag": "latest"
-}
+      },
       {
         "type": "docker-push",
         "login": false,
