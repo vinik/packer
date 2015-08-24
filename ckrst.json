@@ -5,8 +5,6 @@
     "export_path": "image.tar"
   }],
 
-
-
   "provisioners": [
     {
       "type": "shell",
@@ -18,12 +16,13 @@
     {
       "type": "chef-client",
       "server_url": "https://manage.chef.io/organizations/ckrst",
+      "validation_client_name": "ckrst-validator",
+      "validation_key_path": "/home/vinicius/dev/ckrst/chef-repo/.chef/ckrst-validator.pem",
       "run_list": ["git"],
       "skip_clean_client": true,
       "skip_clean_node": true
     }
   ],  
-
 
   "post-processors": [
     [
@@ -41,5 +40,4 @@
       }
     ]
   ]
-
 }
