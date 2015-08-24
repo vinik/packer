@@ -8,7 +8,10 @@
   "provisioners": [
     {
       "type": "chef-client",
-      "server_url": "https://manage.chef.io/organizations/ckrst"
+      "server_url": "https://manage.chef.io/organizations/ckrst",
+      "run_list": ["git"],
+      "skip_clean_client": true,
+      "skip_clean_node": true
     }
   ],  
 
