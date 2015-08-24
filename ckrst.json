@@ -14,15 +14,10 @@
       ]
     },
     {
-      "type": "chef-client",
-      "server_url": "https://manage.chef.io/organizations/ckrst",
-      "client_key": "./chef/packer.pem",
-      "validation_client_name": "packer",
-      "validation_key_path": "./chef/packer.pem",
-      "run_list": ["git"],
-      "skip_clean_client": true,
-      "skip_clean_node": true
-    }
+      "type": "chef-solo",
+      "cookbook_paths": ["chef/cookbooks"],
+      "run_list": ["git"]
+}
   ],  
 
   "post-processors": [
