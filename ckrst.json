@@ -28,6 +28,11 @@
         "tag": "0.1"
       },
       {
+        "type": "docker-tag",
+        "repository": "vinik/web",
+        "tag": "latest"
+}
+      {
         "type": "docker-push",
         "login": false,
         "login_username": "vinik",
