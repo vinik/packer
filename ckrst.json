@@ -18,7 +18,8 @@
         "login": true,
         "login_username": "vinik",
         "login_password": "vinicius.kirst@gmail.com",
-        "login_password": "meuscontainer"
+        "login_password": "meuscontainer",
+        "login_server": "https://hub.docker.com"
       }
     ]
   ]
