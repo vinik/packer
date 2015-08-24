@@ -16,7 +16,7 @@
     {
       "type": "chef-client",
       "server_url": "https://manage.chef.io/organizations/ckrst",
-      "client_key": "chef/packer.pem",
+      "client_key": "chef/packer2.pem",
       "validation_client_name": "ckrst-validator",
       "validation_key_path": "/home/vinicius/dev/ckrst/chef-repo/.chef/ckrst-validator.pem",
       "run_list": ["git"],
