@@ -17,6 +17,7 @@
         "type": "docker-push",
         "login": true,
         "login_username": "vinik",
+        "login_password": "vinicius.kirst@gmail.com",
         "login_password": "meuscontainer"
       }
     ]
