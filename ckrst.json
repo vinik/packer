@@ -5,7 +5,16 @@
     "export_path": "image.tar"
   }],
 
+
+
   "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get update",
+        "apt-get install curl"
+      ]
+    },
     {
       "type": "chef-client",
       "server_url": "https://manage.chef.io/organizations/ckrst",
