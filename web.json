@@ -10,13 +10,13 @@
       "type": "shell",
       "inline": [
         "apt-get update",
-        "apt-get install -y --force-yes curl"
+        "apt-get install -y --force-yes apache2 php5 curl php5-curl php5-intl php5-mcrypt wget"
       ]
     },
     {
       "type": "chef-solo",
       "cookbook_paths": ["chef/cookbooks"],
-      "run_list": ["ckrst", "git"]
+      "run_list": ["ckrst"]
 }
   ],  
 
@@ -39,6 +39,11 @@
         "login_username": "vinik",
         "login_email": "vinicius.kirst@gmail.com",
         "login_password": "meuscontainer"
+      }
+    ],
+    [
+      {
+        "type": "atlas"
       }
     ]
   ]
