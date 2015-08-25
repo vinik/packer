@@ -1,0 +1,45 @@
+{
+  "builders": [{
+    "type": "docker",
+    "image": "mysql",
+    "export_path": "image.tar"
+  }],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get update",
+        "apt-get install -y --force-yes curl"
+      ]
+    },
+    {
+      "type": "chef-solo",
+      "cookbook_paths": ["chef/cookbooks"],
+      "run_list": ["ckrst", "git"]
+    }
+  ],  
+
+  "post-processors": [
+    [
+      {
+        "type": "docker-import",
+        "repository": "vinik/data",
+        "tag": "0.1"
+      },
+      {
+        "type": "docker-tag",
+        "repository": "vinik/data",
+        "tag": "latest",
+        "force": true
+      },
+      {
+        "type": "docker-push",
+        "login": true,
+        "login_username": "vinik",
+        "login_email": "vinicius.kirst@gmail.com",
+        "login_password": "meuscontainer"
+      }
+    ]
+  ]
+}
