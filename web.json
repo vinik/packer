@@ -44,11 +44,6 @@
         "login_email": "vinicius.kirst@gmail.com",
         "login_password": "meuscontainer"
       }
-    ],
-    [
-      {
-        "type": "atlas"
-      }
     ]
   ]
 }
