@@ -1,9 +1,11 @@
 {
-  "builders": [{
-    "type": "docker",
-    "image": "ubuntu",
-    "export_path": "image.tar"
-  }],
+  "builders": [
+    {
+      "type": "docker",
+      "image": "ubuntu",
+      "export_path": "image.tar"
+    }
+  ],
 
   "provisioners": [
     {
@@ -19,7 +21,7 @@
       "type": "chef-solo",
       "cookbook_paths": ["chef/cookbooks"],
       "run_list": ["ckrst"]
-}
+    }
   ],
 
   "post-processors": [
