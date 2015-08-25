@@ -10,7 +10,9 @@
       "type": "shell",
       "inline": [
         "apt-get update",
-        "apt-get install -y --force-yes apache2 php5 curl php5-curl php5-intl php5-mcrypt wget"
+        "apt-get install -y --force-yes apache2 php5 curl php5-curl php5-intl php5-mcrypt wget",
+        "a2enmod php5",
+        "a2enmod rewrite"
       ]
     },
     {
@@ -18,7 +20,7 @@
       "cookbook_paths": ["chef/cookbooks"],
       "run_list": ["ckrst"]
 }
-  ],  
+  ],
 
   "post-processors": [
     [
