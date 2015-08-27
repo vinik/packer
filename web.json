@@ -15,7 +15,6 @@
         "apt-get install -y --force-yes git apache2 php5 curl php5-curl php5-intl php5-mcrypt wget",
         "a2enmod php5",
         "a2enmod rewrite"
-        ""
       ]
     }
   ],
