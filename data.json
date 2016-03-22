@@ -1,16 +1,19 @@
 {
-  "builders": [{
-    "type": "docker",
-    "image": "mysql",
-    "export_path": "image.tar"
-  }],
+  "builders": [
+
+    {
+      "type": "docker",
+      "image": "mysql",
+      "export_path": "image.tar"
+    }
+  ],
 
   "provisioners": [
     {
       "type": "shell",
       "inline": [
         "apt-get update",
-        "apt-get install -y --force-yes curl"
+        "apt-get install -y --force-yes curl sudo"
       ]
     },
     {
@@ -18,7 +21,7 @@
       "cookbook_paths": ["chef/cookbooks"],
       "run_list": ["ckrst", "git"]
     }
-  ],  
+  ],
 
   "post-processors": [
     [
@@ -32,13 +35,6 @@
         "repository": "vinik/data",
         "tag": "latest",
         "force": true
-      },
-      {
-        "type": "docker-push",
-        "login": true,
-        "login_username": "vinik",
-        "login_email": "vinicius.kirst@gmail.com",
-        "login_password": "meuscontainer"
       }
     ]
   ]

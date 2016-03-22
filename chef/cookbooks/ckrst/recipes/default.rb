@@ -10,7 +10,6 @@
 group 'ckrst'
 group 'vinicius'
 
-
 user 'Vinícius Kirst' do
   username 'vinicius'
   group 'vinicius'

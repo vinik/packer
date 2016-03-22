@@ -1,4 +1,9 @@
 {
+  "variables": {
+    "aws_access_key": "",
+    "aws_secret_key": ""
+  },
+
   "builders": [
     {
       "type": "docker",
@@ -12,6 +17,18 @@
       "type": "shell",
       "inline": [
         "apt-get update",
+        "apt-get install -y --force-yes curl sudo"
+      ]
+    },
+    {
+      "type": "chef-solo",
+      "cookbook_paths": ["chef/cookbooks"],
+      "run_list": ["ckrst", "git"]
+    },
+
+    {
+      "type": "shell",
+      "inline": [
         "apt-get install -y --force-yes git apache2 php5 curl php5-curl php5-intl php5-mcrypt wget",
         "a2enmod php5",
         "a2enmod rewrite"
@@ -31,13 +48,6 @@
         "repository": "vinik/web",
         "tag": "latest",
         "force": true
-      },
-      {
-        "type": "docker-push",
-        "login": true,
-        "login_username": "vinik",
-        "login_email": "vinicius.kirst@gmail.com",
-        "login_password": "meuscontainer"
       }
     ]
   ]
