@@ -14,6 +14,5 @@ addons:
     - chefdk
 
 script:
-- ls -la
-- chmod u+x runtests.sh
-- ./runtests.sh
+- rubocop
+- foodcritic chef/cookbooks/ckrst
