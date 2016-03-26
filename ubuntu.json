@@ -1,0 +1,79 @@
+{
+  "builders": [
+    {
+      "type": "docker",
+      "image": "ubuntu:trusty",
+      "export_path": "image.tar"
+    },
+    {
+      "type": "virtualbox-iso",
+      "guest_os_type": "Ubuntu_64",
+      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.5-server-amd64.iso",
+      "iso_checksum": "769474248a3897f4865817446f9a4a53",
+      "iso_checksum_type": "md5",
+      "ssh_username": "packer",
+      "ssh_password": "packer",
+      "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "apt-get update",
+        "apt-get install -y --force-yes curl sudo"
+      ]
+    },
+    {
+      "type": "chef-solo",
+      "cookbook_paths": ["chef/cookbooks"],
+      "run_list": ["ckrst", "git"]
+    },
+
+    {
+      "type": "shell",
+      "inline": [
+        "pwd"
+      ]
+    }
+  ],
+
+  "post-processors": [
+    [
+      {
+        "type": "docker-import",
+        "repository": "vinik/ubuntu",
+        "tag": "0.1",
+        "only": "docker"
+      },
+      {
+        "type": "docker-tag",
+        "repository": "vinik/ubuntu",
+        "tag": "trusty",
+        "force": true,
+        "only": "docker"
+      },
+      {
+        "type": "docker-tag",
+        "repository": "vinik/ubuntu",
+        "tag": "latest",
+        "force": true,
+        "only": "docker"
+      },
+
+
+      {
+        "type": "vagrant",
+        "compression_level": 1,
+        "override": {
+          "vmware": {
+            "compression_level": 0
+          }
+        },
+        "only": "virtualbox-iso"
+      }
+
+    ]
+  ]
+}
