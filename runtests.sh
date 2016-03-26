@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-set -o errexit
-
-unset GEM_PATH
+# set -o errexit
+#
+# unset GEM_PATH
 
 # for f in $(git ls-files '*.json' | grep -v /) ; do
 #   echo -en "$f "
