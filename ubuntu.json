@@ -1,4 +1,11 @@
 {
+
+  "description": "My base box",
+
+  "variables": {
+		"no_proxy": "{{env `no_proxy`}}",
+		"preseed_path": "ubuntu-14.04/preseed.cfg"
+	},
   "builders": [
     {
       "type": "docker",
@@ -8,13 +15,37 @@
     {
       "type": "virtualbox-iso",
       "guest_os_type": "Ubuntu_64",
-      "iso_url": "http://releases.ubuntu.com/12.04/ubuntu-12.04.5-server-amd64.iso",
-      "iso_checksum": "769474248a3897f4865817446f9a4a53",
+      "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04.4-server-amd64.iso",
+      "iso_checksum": "9e5fecc94b3925bededed0fdca1bd417",
       "iso_checksum_type": "md5",
-      "ssh_username": "packer",
-      "ssh_password": "packer",
-      "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
-    }
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+			"ssh_port": 22,
+			"ssh_wait_timeout": "10000s",
+			"boot_command": [
+        "<esc><wait>",
+        "<esc><wait>",
+        "<enter><wait>",
+        "/install/vmlinuz",
+        " auto=true",
+        " priority=critical",
+        " initrd=/install/initrd.gz",
+				" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed_path`}}<wait>",
+        " -- ",
+        "<enter>"
+      ],
+			"shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+			"boot_wait": "10s",
+      "disk_size": 40960,
+			"headless": false,
+			"http_directory": "http",
+			"vm_name": "s2way packer-ubuntu-14.04-amd64",
+			"guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+			"vboxmanage": [
+				["modifyvm", "{{.Name}}", "--memory", "1024"],
+				["modifyvm", "{{.Name}}", "--cpus", "1"]
+			]
+		}
   ],
 
   "provisioners": [
@@ -45,21 +76,21 @@
         "type": "docker-import",
         "repository": "vinik/ubuntu",
         "tag": "0.1",
-        "only": "docker"
+        "only": ["docker"]
       },
       {
         "type": "docker-tag",
         "repository": "vinik/ubuntu",
         "tag": "trusty",
         "force": true,
-        "only": "docker"
+        "only": ["docker"]
       },
       {
         "type": "docker-tag",
         "repository": "vinik/ubuntu",
         "tag": "latest",
         "force": true,
-        "only": "docker"
+        "only": ["docker"]
       },
 
 
@@ -71,7 +102,7 @@
             "compression_level": 0
           }
         },
-        "only": "virtualbox-iso"
+        "only": ["virtualbox-iso"]
       }
 
     ]
