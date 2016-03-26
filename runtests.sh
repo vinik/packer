@@ -23,4 +23,4 @@
 # done
 
 rubocop
-./run-foodcritic chef/cookbooks
+./run-foodcritic chef/cookbooks/ckrst
