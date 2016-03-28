@@ -4,7 +4,8 @@
 
   "variables": {
 		"no_proxy": "{{env `no_proxy`}}",
-		"preseed_path": "ubuntu-14.04/preseed.cfg"
+		"preseed_path": "http/preseed.cfg",
+    "atlas_token": "ATLAS_TOKEN_HERE"
 	},
   "builders": [
     {
@@ -14,14 +15,18 @@
     },
     {
       "type": "virtualbox-iso",
+
       "guest_os_type": "Ubuntu_64",
+
       "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04.4-server-amd64.iso",
       "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
       "iso_checksum_type": "md5",
+
       "ssh_username": "vagrant",
       "ssh_password": "vagrant",
 			"ssh_port": 22,
 			"ssh_wait_timeout": "10000s",
+
 			"boot_command": [
         "<esc><wait>",
         "<esc><wait>",
@@ -30,7 +35,7 @@
         " auto=true",
         " priority=critical",
         " initrd=/install/initrd.gz",
-				" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{user `preseed_path`}}<wait>",
+				" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
         " -- ",
         "<enter>"
       ],
@@ -39,10 +44,10 @@
       "disk_size": 40960,
 			"headless": false,
 			"http_directory": "http",
-			"vm_name": "s2way packer-ubuntu-14.04-amd64",
+			"vm_name": "packer-ubuntu-14.04-amd64",
 			"guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
 			"vboxmanage": [
-				["modifyvm", "{{.Name}}", "--memory", "1024"],
+				["modifyvm", "{{.Name}}", "--memory", "512"],
 				["modifyvm", "{{.Name}}", "--cpus", "1"]
 			]
 		}
@@ -54,14 +59,22 @@
       "inline": [
         "apt-get update",
         "apt-get install -y --force-yes curl sudo"
-      ]
+      ],
+      "only": ["docker"]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt-get update",
+        "sudo apt-get install -y --force-yes curl"
+      ],
+      "only": ["virtualbox-iso"]
     },
     {
       "type": "chef-solo",
       "cookbook_paths": ["chef/cookbooks"],
       "run_list": ["ckrst", "git"]
     },
-
     {
       "type": "shell",
       "inline": [
@@ -92,8 +105,6 @@
         "force": true,
         "only": ["docker"]
       },
-
-
       {
         "type": "vagrant",
         "compression_level": 1,
@@ -104,7 +115,6 @@
         },
         "only": ["virtualbox-iso"]
       }
-
     ]
   ]
 }
