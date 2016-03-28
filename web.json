@@ -23,15 +23,15 @@
     {
       "type": "chef-solo",
       "cookbook_paths": ["chef/cookbooks"],
-      "run_list": ["ckrst", "git", "apache2"]
+      "run_list": ["ckrst", "git"]
     },
 
     {
       "type": "shell",
       "inline": [
-        "apt-get install -y --force-yes php5 php5-curl php5-intl php5-mcrypt php5-mysql wget",
+        "apt-get install -y --force-yes apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql wget ssh",
         "a2enmod php5",
-        "a2enmod rewrite"
+        "a2enmod rewrite",
       ]
     }
   ],
