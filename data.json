@@ -1,6 +1,5 @@
 {
   "builders": [
-
     {
       "type": "docker",
       "image": "mysql",
