@@ -1,120 +1,156 @@
 {
 
-  "description": "My base box",
 
-  "variables": {
-		"no_proxy": "{{env `no_proxy`}}",
-		"preseed_path": "http/preseed.cfg",
-    "atlas_token": "ATLAS_TOKEN_HERE"
-	},
-  "builders": [
-    {
-      "type": "docker",
-      "image": "ubuntu:trusty",
-      "export_path": "image.tar"
+    "description": "My base box",
+
+    "variables": {
+        "no_proxy": "{{env `no_proxy`}}",
+        "preseed_path": "http/preseed.cfg",
+        "atlas_token": "tjTOgFjLjGVmZQ.atlasv1.wlWEYNDAa6lnbojNdYBPIX8pvMn25zhZzWnyY0CJzZwchBYC0x3rmJpudA1QqyHdgfs"
     },
-    {
-      "type": "virtualbox-iso",
-
-      "guest_os_type": "Ubuntu_64",
-
-      "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04.4-server-amd64.iso",
-      "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
-      "iso_checksum_type": "md5",
-
-      "ssh_username": "vagrant",
-      "ssh_password": "vagrant",
-			"ssh_port": 22,
-			"ssh_wait_timeout": "10000s",
-
-			"boot_command": [
-        "<esc><wait>",
-        "<esc><wait>",
-        "<enter><wait>",
-        "/install/vmlinuz",
-        " auto=true",
-        " priority=critical",
-        " initrd=/install/initrd.gz",
-				" preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
-        " -- ",
-        "<enter>"
-      ],
-			"shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
-			"boot_wait": "10s",
-      "disk_size": 40960,
-			"headless": false,
-			"http_directory": "http",
-			"vm_name": "packer-ubuntu-14.04-amd64",
-			"guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
-			"vboxmanage": [
-				["modifyvm", "{{.Name}}", "--memory", "512"],
-				["modifyvm", "{{.Name}}", "--cpus", "1"]
-			]
-		}
-  ],
-
-  "provisioners": [
-    {
-      "type": "shell",
-      "inline": [
-        "apt-get update",
-        "apt-get install -y --force-yes curl sudo"
-      ],
-      "only": ["docker"]
-    },
-    {
-      "type": "shell",
-      "inline": [
-        "sudo apt-get update",
-        "sudo apt-get install -y --force-yes curl"
-      ],
-      "only": ["virtualbox-iso"]
-    },
-    {
-      "type": "chef-solo",
-      "cookbook_paths": ["chef/cookbooks"],
-      "run_list": ["ckrst", "git"]
-    },
-    {
-      "type": "shell",
-      "inline": [
-        "pwd"
-      ]
-    }
-  ],
-
-  "post-processors": [
-    [
-      {
-        "type": "docker-import",
-        "repository": "vinik/ubuntu",
-        "tag": "0.1",
-        "only": ["docker"]
-      },
-      {
-        "type": "docker-tag",
-        "repository": "vinik/ubuntu",
-        "tag": "trusty",
-        "force": true,
-        "only": ["docker"]
-      },
-      {
-        "type": "docker-tag",
-        "repository": "vinik/ubuntu",
-        "tag": "latest",
-        "force": true,
-        "only": ["docker"]
-      },
-      {
-        "type": "vagrant",
-        "compression_level": 1,
-        "override": {
-          "vmware": {
-            "compression_level": 0
-          }
+    "builders": [
+        {
+            "type": "docker",
+            "image": "ubuntu:trusty",
+            "export_path": "image.tar"
         },
-        "only": ["virtualbox-iso"]
-      }
+        {
+            "type": "virtualbox-iso",
+
+            "guest_os_type": "Ubuntu_64",
+
+            "iso_url": "http://releases.ubuntu.com/trusty/ubuntu-14.04.4-server-amd64.iso",
+            "iso_checksum": "2ac1f3e0de626e54d05065d6f549fa3a",
+            "iso_checksum_type": "md5",
+
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "10000s",
+
+            "boot_command": [
+                "<esc><wait>",
+                "<esc><wait>",
+                "<enter><wait>",
+                "/install/vmlinuz",
+                " auto=true",
+                " priority=critical",
+                " initrd=/install/initrd.gz",
+                " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+                " -- ",
+                "<enter>"
+            ],
+            "shutdown_command": "echo 'vagrant'|sudo -S shutdown -P now",
+            "boot_wait": "10s",
+            "disk_size": 40960,
+            "headless": false,
+            "http_directory": "http",
+            "vm_name": "packer-ubuntu-14.04-amd64",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "vboxmanage": [
+                ["modifyvm", "{{.Name}}", "--memory", "512"],
+                ["modifyvm", "{{.Name}}", "--cpus", "1"]
+            ]
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "apt-get update",
+                "apt-get install -y --force-yes curl sudo"
+            ],
+            "only": ["docker"]
+        },
+
+        {
+            "type": "shell",
+            "environment_vars": [
+                "HOME_DIR=/home/vagrant",
+                "http_proxy={{user `http_proxy`}}",
+                "https_proxy={{user `https_proxy`}}",
+                "no_proxy={{user `no_proxy`}}"
+            ],
+            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E sh -eux '{{.Path}}'",
+            "scripts": [
+                "scripts/ubuntu/update.sh",
+                "scripts/common/sshd.sh",
+                "scripts/ubuntu/networking.sh",
+                "scripts/ubuntu/sudoers.sh",
+                "scripts/ubuntu/vagrant.sh",
+                "scripts/common/vmtools.sh",
+                "scripts/ubuntu/cleanup.sh",
+                "scripts/common/minimize.sh"
+            ],
+            "only": ["virtualbox-iso"]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo apt-get update",
+                "sudo apt-get install -y --force-yes curl"
+            ],
+            "only": ["virtualbox-iso"]
+        },
+
+        {
+            "type": "chef-solo",
+            "cookbook_paths": ["chef/cookbooks"],
+            "run_list": ["ckrst", "git"]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "pwd"
+            ]
+        }
+    ],
+
+    "post-processors": [
+        [
+            {
+                "type": "docker-import",
+                "repository": "vinik/ubuntu",
+                "tag": "0.1",
+                "only": ["docker"]
+            },
+            {
+                "type": "docker-tag",
+                "repository": "vinik/ubuntu",
+                "tag": "trusty",
+                "force": true,
+                "only": ["docker"]
+            },
+            {
+                "type": "docker-tag",
+                "repository": "vinik/ubuntu",
+                "tag": "latest",
+                "force": true,
+                "only": ["docker"]
+            },
+
+            {
+                "type": "vagrant",
+                "compression_level": 1,
+                "override": {
+                    "vmware": {
+                        "compression_level": 0
+                    }
+                },
+                "only": ["virtualbox-iso"]
+            },
+            {
+                "type": "atlas",
+                "token": "{{user `atlas_token`}}",
+                "artifact": "vinik/ubuntu",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "created_at": "{{timestamp}}",
+                    "provider": "virtualbox"
+                },
+                "only": ["virtualbox-iso"]
+            }
+        ]
     ]
-  ]
 }
