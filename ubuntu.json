@@ -4,6 +4,7 @@
     "description": "My base box",
 
     "variables": {
+        "prefix": "vinik",
         "no_proxy": "{{env `no_proxy`}}",
         "preseed_path": "http/preseed.cfg",
         "atlas_token": "tjTOgFjLjGVmZQ.atlasv1.wlWEYNDAa6lnbojNdYBPIX8pvMn25zhZzWnyY0CJzZwchBYC0x3rmJpudA1QqyHdgfs"
@@ -98,12 +99,6 @@
             "type": "chef-solo",
             "cookbook_paths": ["chef/cookbooks"],
             "run_list": ["ckrst", "git"]
-        },
-        {
-            "type": "shell",
-            "inline": [
-                "pwd"
-            ]
         }
     ],
 
@@ -127,6 +122,28 @@
                 "repository": "vinik/ubuntu",
                 "tag": "latest",
                 "force": true,
+                "only": ["docker"]
+            },
+            {
+                "type": "atlas",
+                "token": "{{user `atlas_token`}}",
+                "artifact": "vinik/ubuntu",
+                "artifact_type": "docker.image",
+                "metadata": {
+                    "created_at": "{{timestamp}}",
+                    "provider": "docker"
+                },
+                "only": ["docker"]
+            },
+            {
+                "type": "atlas",
+                "token": "{{user `atlas_token`}}",
+                "artifact": "vinik/ubuntu",
+                "artifact_type": "vagrant.box",
+                "metadata": {
+                    "created_at": "{{timestamp}}",
+                    "provider": "docker"
+                },
                 "only": ["docker"]
             },
 
