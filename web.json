@@ -1,54 +1,92 @@
 {
-  "variables": {
-    "aws_access_key": "",
-    "aws_secret_key": ""
-  },
+    "variables": {
+        "aws_access_key": "{{env `AWS_ACCESS_KEY`}}",
+        "aws_secret_key": "{{env `AWS_SECRET_KEY`}}",
 
-  "builders": [
-    {
-      "type": "docker",
-      "image": "ubuntu",
-      "export_path": "image.tar"
-    }
-  ],
+        "digitalocean_api_token": "{{env `DIGITALOCEAN_API_TOKEN`}}",
 
-  "provisioners": [
-    {
-      "type": "shell",
-      "inline": [
-        "apt-get update",
-        "apt-get install -y --force-yes curl sudo"
-      ]
-    },
-    {
-      "type": "chef-solo",
-      "cookbook_paths": ["chef/cookbooks"],
-      "run_list": ["ckrst", "git"]
+        "openstack_keystone_host": "10.40.31.12",
+        "openstack_source_image": "ubuntu_xenial"
     },
 
-    {
-      "type": "shell",
-      "inline": [
-        "apt-get install -y --force-yes apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql wget ssh",
-        "a2enmod php5",
-        "a2enmod rewrite"
-      ]
-    }
-  ],
+    "builders": [
+        {
+            "type": "docker",
+            "image": "vinik/ubuntu:trusty",
+            "export_path": "image.tar"
+        },
+        {
+            "type": "openstack",
+            "identity_endpoint": "http://{{user `openstack_keystone_host`}}:5000/v3",
+            "tenant_name": "admin",
+            "domain_name": "Default",
+            "username": "admin",
+            "password": "secret",
+            "region": "RegionOne",
+            "ssh_username": "ubuntu",
+            "image_name": "vinik/ubuntu",
+            "source_image": "<image id>",
+            "flavor": "m1.small",
+            "insecure": "true"
+        },
+        {
+            "type": "amazon-ebs",
+            "access_key": "{{user `aws_access_key`}}",
+            "secret_key": "{{user `aws_secret_key`}}",
+            "region": "us-east-1",
+            "source_ami": "ami-fce3c696",
+            "instance_type": "t2.micro",
+            "ssh_username": "ubuntu",
+            "ami_name": "vinik ubuntu-14 packer {{timestamp}}"
+        },
+        {
+            "type": "digitalocean",
+            "api_token": "{{user `digitalocean_api_token`}}",
+            "image": "ubuntu-16-04-x64",
+            "region": "nyc2",
+            "size": "512mb"
+        }
+    ],
 
-  "post-processors": [
-    [
-      {
-        "type": "docker-import",
-        "repository": "vinik/web",
-        "tag": "0.1"
-      },
-      {
-        "type": "docker-tag",
-        "repository": "vinik/web",
-        "tag": "latest",
-        "force": true
-      }
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "apt-get update",
+                "apt-get install -y --force-yes curl sudo"
+            ]
+        },
+        {
+            "type": "chef-solo",
+            "cookbook_paths": ["chef/cookbooks"],
+            "run_list": ["ckrst", "git", "zip", "php"]
+        },
+
+        {
+            "type": "shell",
+            "inline": [
+                "apt-get install -y --force-yes apache2 php5 php5-curl php5-intl php5-mcrypt php5-mysql wget ssh",
+                "a2enmod php5",
+                "a2enmod rewrite"
+            ]
+        }
+    ],
+
+    "post-processors": [
+        [
+            {
+                "type": "docker-import",
+                "repository": "vinik/web",
+                "tag": "0.1",
+                "only": ["docker"]
+            },
+            {
+                "type": "docker-tag",
+                "repository": "vinik/web",
+                "tag": "latest",
+                "force": true,
+                "only": ["docker"]
+            }
+        ]
     ]
-  ]
 }
