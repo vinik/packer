@@ -18,3 +18,5 @@ user 'Vinícius Kirst' do
   shell '/bin/bash'
   home '/home/vinicius'
 end
+
+package 'wget'

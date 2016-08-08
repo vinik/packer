@@ -1,0 +1,14 @@
+require 'rake'
+require 'rspec/core/rake_task'
+
+roles = %w(
+    web
+    test-switch
+)
+
+roles.each do |role|
+    desc "Run serverspec to #{role}"
+    RSpec::Core::RakeTask.new(role) do |t|
+        t.pattern = "spec/{base,#{role}}/*_spec.rb"
+    end
+end

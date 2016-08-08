@@ -20,5 +20,10 @@ describe 'ckrst::default' do
         expect(chef_run).to create_user('vinicius')
     end
 
+    it 'installs wget package' do
+        chef_run.converge(described_recipe)
+        expect(chef_run).to install_package('wget')
+    end
+
 
 end

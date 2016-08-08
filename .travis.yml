@@ -15,4 +15,8 @@ addons:
 
 script:
 - foodcritic chef/cookbooks/ckrst
+- foodcritic chef/cookbooks/ruby2
+- foodcritic chef/cookbooks/web
 - chef exec rspec chef/cookbooks/ckrst
+- chef exec rspec chef/cookbooks/ruby2
+- chef exec rspec chef/cookbooks/web

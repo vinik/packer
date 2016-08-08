@@ -1,12 +1,6 @@
 {
     "variables": {
-        "aws_access_key": "{{env `AWS_ACCESS_KEY`}}",
-        "aws_secret_key": "{{env `AWS_SECRET_KEY`}}",
 
-        "digitalocean_api_token": "{{env `DIGITALOCEAN_API_TOKEN`}}",
-
-        "openstack_keystone_host": "10.40.31.12",
-        "openstack_source_image": "ubuntu_xenial"
     },
 
     "builders": [
@@ -15,16 +9,6 @@
             "image": "vinik/ubuntu:latest",
             "export_path": "image.tar",
             "pull": false
-        },
-        {
-            "type": "amazon-ebs",
-            "access_key": "{{user `aws_access_key`}}",
-            "secret_key": "{{user `aws_secret_key`}}",
-            "region": "us-east-1",
-            "source_ami": "ami-fce3c696",
-            "instance_type": "t2.micro",
-            "ssh_username": "ubuntu",
-            "ami_name": "vinik ubuntu-14 packer {{timestamp}}"
         }
     ],
 
@@ -42,7 +26,7 @@
                 "chef/cookbooks",
                 "chef/cookbooks/berks-cookbooks"
             ],
-            "run_list": ["ruby2", "ckrst", "web"]
+            "run_list": ["nodejs", "test-switch"]
         },
         {
             "type": "file",
@@ -59,13 +43,13 @@
         [
             {
                 "type": "docker-import",
-                "repository": "vinik/web",
+                "repository": "vinik/test-switch",
                 "tag": "0.1",
                 "only": ["docker"]
             },
             {
                 "type": "docker-tag",
-                "repository": "vinik/web",
+                "repository": "vinik/test-switch",
                 "tag": "latest",
                 "force": true,
                 "only": ["docker"]

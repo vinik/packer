@@ -98,7 +98,7 @@
         {
             "type": "chef-solo",
             "cookbook_paths": ["chef/cookbooks"],
-            "run_list": ["ckrst", "git"]
+            "run_list": ["ckrst", "git", "zip"]
         }
     ],
 

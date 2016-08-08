@@ -1,0 +1,9 @@
+source "https://supermarket.chef.io"
+
+cookbook 'git'
+cookbook 'zip'
+cookbook 'php'
+cookbook 'apt'
+cookbook 'apache2'
+cookbook 'nodejs'
+cookbook 'docker'
