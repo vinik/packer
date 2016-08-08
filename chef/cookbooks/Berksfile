@@ -7,3 +7,4 @@ cookbook 'apt'
 cookbook 'apache2'
 cookbook 'nodejs'
 cookbook 'docker'
+cookbook 'ruby2', git: "https://github.com/vinik/ruby2_cookbook.git"
